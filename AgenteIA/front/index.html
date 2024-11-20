@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Virtual</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #chat-box { width: 100%; max-width: 600px; margin: 20px auto; }
+        .message { padding: 10px; border-radius: 5px; margin: 10px 0; }
+        .user-message { background-color: #f1f1f1; text-align: right; }
+        .assistant-message { background-color: #d1f7c4; text-align: left; }
+        #input-box { display: flex; }
+        #input-box input { flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        #input-box button { padding: 10px 20px; margin-left: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div id="chat-box">
+    <div id="messages"></div>
+    <div id="input-box">
+        <input type="text" id="user-input" placeholder="Escribe tu mensaje...">
+        <button onclick="sendMessage()">Enviar</button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        const input = document.getElementById("user-input");
+        const message = input.value.trim();
+        if (!message) return;
+
+        displayMessage(message, 'user-message');
+
+        const response = await fetch('/api/consulta', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: message })
+        });
+        const data = await response.json();
+        displayMessage(data.reply, 'assistant-message');
+
+        input.value = '';
+    }
+
+    function displayMessage(message, className) {
+        const messageBox = document.createElement("div");
+        messageBox.classList.add("message", className);
+        messageBox.textContent = message;
+        document.getElementById("messages").appendChild(messageBox);
+    }
+</script>
+
+</body>
+</html>
