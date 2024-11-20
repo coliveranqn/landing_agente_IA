@@ -1,1 +1,318 @@
-#PROMPTS
+#PROMPT entregado a ChatGPT Omni 
+ Actuarás como desarrollador web y deberás generar un sitio que funcione como landing page de una empresa de venta de calzado de dama y caballeros entre 25 y 55 años, en la pagina se deberá ver el slogan de la marca en un lugar resaltado como "Calidad en cada paso" , deberá tener secciones diferentes para presentar: lanzamientos, damas, caballeros, oportunidades, contacto, quienes somos. los clientes deberán poder registrarse para recibir novedades y hacer compras a traves del sitio de e-commerce. tambien el sitio deberá contar con un asistente virtual el que deberá aparecer flotando en la parte inferior derecha del sitio y mantenerse allí aun cuando se haga un scrolling de productos. La lista de productos con su imagen ,precio, descripción y stock, se deberán recuperar desde una base de datos de productos en sqlserver, deberás desarrollarlo en un framework seguro siguiendo las recomendaciones de secdevops 
+
+Para desarrollar una landing page para tu empresa de calzado con las especificaciones que mencionaste, te propongo una estructura basada en un framework seguro como **Next.js** (React) en el frontend y **Node.js** con **Express** en el backend. Esto permitirá una implementación eficiente del SEO, una buena experiencia de usuario y la integración con una base de datos SQL Server de manera segura. Aquí te presento una propuesta detallada para el sitio:
+
+### Tecnologías y Frameworks
+1. **Frontend:** Next.js (React) para una página rápida y optimizada para SEO.
+2. **Backend:** Node.js con Express para manejar las solicitudes y conectarse a la base de datos.
+3. **Base de Datos:** SQL Server para almacenar los productos y el registro de clientes.
+4. **Estilos y UI/UX:** Tailwind CSS o Bootstrap para un diseño moderno y adaptable.
+5. **Seguridad:** Implementación de prácticas SecDevOps como autenticación segura, encriptación de datos sensibles y protección contra vulnerabilidades comunes (por ejemplo, inyecciones SQL, XSS).
+
+### Estructura de la Página
+
+#### 1. **Header y Barra de Navegación**
+   - Menú principal con enlaces a las secciones:
+     - **Lanzamientos**
+     - **Damas**
+     - **Caballeros**
+     - **Oportunidades**
+     - **Contacto**
+     - **Quiénes Somos**
+   - Botón de acceso rápido para **Registrarse/Iniciar sesión** y **Carrito de Compras**.
+
+#### 2. **Sección Principal (Hero)**
+   - Banner de bienvenida con imágenes de alta calidad de los productos más destacados.
+   - **Slogan "Calidad en cada paso"** en un lugar destacado, utilizando una tipografía elegante y profesional.
+
+#### 3. **Sección de Productos**
+   - **Filtros**: Clasificación por categorías (Damas, Caballeros, Oportunidades).
+   - Cada producto muestra:
+     - **Imagen del producto**
+     - **Nombre**
+     - **Precio**
+     - **Descripción breve**
+     - **Disponibilidad de stock** (consulta en tiempo real desde la base de datos SQL Server)
+   - **Botón de Compra** para añadir al carrito o realizar la compra inmediata.
+
+#### 4. **Sección de Registro para Novedades**
+   - Formulario para que los clientes se registren con nombre, email y preferencias de compra.
+   - Enlace a la política de privacidad.
+
+#### 5. **Carrito de Compras y Checkout**
+   - **Carrito dinámico** para gestionar los productos seleccionados por el cliente.
+   - **Proceso de compra** seguro con cifrado de datos.
+
+#### 6. **Asistente Virtual Flotante**
+   - Ubicado en la parte inferior derecha y fijo durante el desplazamiento.
+   - Integrado con una solución de chatbot (por ejemplo, Dialogflow o ChatGPT API) para brindar asistencia en tiempo real.
+   - Responde preguntas frecuentes, da recomendaciones de productos y ayuda con el proceso de compra.
+
+#### 7. **Footer**
+   - Información de contacto: dirección, teléfono, correo electrónico y enlaces a redes sociales.
+   - Enlaces rápidos a las secciones principales.
+   - **Formulario de Contacto** adicional con validación de campos.
+
+### Conexión a la Base de Datos (SQL Server)
+- Implementar una API REST en el backend que permita las operaciones CRUD para los productos (consulta de stock, precios, descripciones).
+- Utilizar consultas parametrizadas para prevenir inyecciones SQL.
+
+### Seguridad (SecDevOps)
+1. **Validación de Entradas y Sanitización** de todos los datos que ingresen en el sitio.
+2. **Autenticación y Autorización Seguras** para clientes y administradores.
+3. **Encriptación** de datos sensibles (por ejemplo, contraseñas, información de pago).
+4. **Manejo de Sesiones Seguras** y tokens para evitar problemas de autenticación.
+5. **Revisión de Seguridad Continua**: Configurar un pipeline de CI/CD con análisis de vulnerabilidades y pruebas de penetración automatizadas.
+
+### Despliegue
+El sitio puede alojarse en plataformas como **Vercel** para el frontend y **Heroku** o **AWS** para el backend, lo que ofrece un entorno seguro y escalable.
+
+¿Te gustaría profundizar en alguna de estas áreas o hacer alguna personalización?
+
+PROMPT
+ok entonces ahora necesito que me des el código para el back y el font utilizando boostrap
+Para desarrollar el backend y frontend usando Node.js con Express y Next.js, respectivamente, y Bootstrap como el framework de estilos en el frontend, a continuación te ofrezco un esquema básico de código. Este esquema incluye:
+
+1. Configuración del backend en Node.js para conectar a SQL Server.
+2. El frontend en Next.js con Bootstrap para mostrar los productos y gestionar las rutas de la landing page.
+3. Un ejemplo de asistente virtual básico.
+
+### 1. Backend en Node.js con Express
+
+#### A) Configura un proyecto Node.js
+
+Inicia un proyecto de Node.js y configura el archivo `package.json`:
+
+```bash
+mkdir zapateria-backend
+cd zapateria-backend
+npm init -y
+npm install express mssql cors dotenv
+```
+
+#### B) Configuración de SQL Server en `.env`
+
+Crea un archivo `.env` en la raíz del proyecto para almacenar las credenciales de SQL Server:
+
+```plaintext
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+DB_SERVER=localhost
+DB_DATABASE=zapateria
+DB_PORT=1433
+```
+
+#### C) Configura la Conexión a SQL Server y APIs
+
+Crea un archivo `db.js` para manejar la conexión a la base de datos:
+
+```javascript
+// db.js
+const sql = require('mssql');
+require('dotenv').config();
+
+const sqlConfig = {
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_DATABASE,
+    port: parseInt(process.env.DB_PORT, 10),
+    options: { encrypt: true, enableArithAbort: true },
+};
+
+async function connectToDb() {
+    try {
+        await sql.connect(sqlConfig);
+        console.log('Connected to SQL Server');
+    } catch (err) {
+        console.error('Database connection error:', err);
+    }
+}
+
+module.exports = { sql, connectToDb };
+```
+
+Luego, crea el servidor Express en `server.js`:
+
+```javascript
+// server.js
+const express = require('express');
+const cors = require('cors');
+const { sql, connectToDb } = require('./db');
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+connectToDb();
+
+// Rutas de API para obtener productos
+app.get('/api/products', async (req, res) => {
+    try {
+        const result = await sql.query`SELECT * FROM productos`;
+        res.json(result.recordset);
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        res.status(500).send('Error fetching products');
+    }
+});
+
+// Rutas adicionales según las secciones
+// Ruta para recibir registros de clientes interesados en novedades
+app.post('/api/register', async (req, res) => {
+    const { nombre, email } = req.body;
+    try {
+        await sql.query`INSERT INTO clientes (nombre, email) VALUES (${nombre}, ${email})`;
+        res.status(201).send('Registro exitoso');
+    } catch (error) {
+        console.error('Error registrando cliente:', error);
+        res.status(500).send('Error registrando cliente');
+    }
+});
+
+app.listen(3001, () => console.log('Server running on http://localhost:3001'));
+```
+
+### 2. Frontend en Next.js y Bootstrap
+
+#### A) Configura un proyecto Next.js
+
+Crea el proyecto y añade Bootstrap:
+
+```bash
+npx create-next-app zapateria-frontend
+cd zapateria-frontend
+npm install bootstrap axios
+```
+
+Añade Bootstrap en `pages/_app.js`:
+
+```javascript
+// pages/_app.js
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../styles/globals.css';
+import { useEffect } from 'react';
+
+function MyApp({ Component, pageProps }) {
+    useEffect(() => {
+        import('bootstrap/dist/js/bootstrap');
+    }, []);
+
+    return <Component {...pageProps} />;
+}
+
+export default MyApp;
+```
+
+#### B) Crea la Landing Page con Bootstrap
+
+Crea una página en `pages/index.js` para la estructura de la landing page:
+
+```javascript
+// pages/index.js
+import axios from 'axios';
+import { useState, useEffect } from 'react';
+
+export default function Home() {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        axios.get('http://localhost:3001/api/products')
+            .then((response) => setProducts(response.data))
+            .catch((error) => console.error('Error fetching products:', error));
+    }, []);
+
+    return (
+        <div className="container">
+            <header className="my-4 text-center">
+                <h1>Calidad en cada paso</h1>
+            </header>
+            
+            {/* Sección de productos */}
+            <div className="row">
+                {products.map((product) => (
+                    <div key={product.id} className="col-md-4 mb-4">
+                        <div className="card">
+                            <img src={product.image} className="card-img-top" alt={product.nombre} />
+                            <div className="card-body">
+                                <h5 className="card-title">{product.nombre}</h5>
+                                <p className="card-text">{product.descripcion}</p>
+                                <p className="card-text">${product.precio}</p>
+                                <button className="btn btn-primary">Comprar</button>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {/* Asistente virtual */}
+            <div className="virtual-assistant">
+                <button className="btn btn-secondary">¿Necesitas ayuda?</button>
+            </div>
+        </div>
+    );
+}
+```
+
+#### C) Estilos para el Asistente Virtual
+
+En `styles/globals.css`, añade estilos para el asistente virtual:
+
+```css
+.virtual-assistant {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.virtual-assistant button {
+    border-radius: 50%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+}
+```
+
+#### D) Configuración del Asistente Virtual
+
+Puedes conectar el botón del asistente virtual a un chatbot o a un modal que ofrezca ayuda mediante FAQ o enlaces de contacto. Por ahora, este botón solo muestra un mensaje en consola al hacer clic:
+
+```javascript
+// In pages/index.js, within the virtual-assistant button
+<button className="btn btn-secondary" onClick={() => console.log("Asistente Virtual activado")}>¿Necesitas ayuda?</button>
+```
+
+### 3. Configura el Proxy para Desarrollo
+
+En `next.config.js`, configura el proxy para redirigir solicitudes API al backend:
+
+```javascript
+module.exports = {
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:3001/api/:path*',
+            },
+        ];
+    },
+};
+```
+
+### Ejecución
+
+Para iniciar ambos servidores:
+
+1. En el backend (`zapateria-backend`):
+   ```bash
+   node server.js
+   ```
+
+2. En el frontend (`zapateria-frontend`):
+   ```bash
+   npm run dev
+   ```
+
+Esto te brindará una landing page con Bootstrap, un backend en Express, y conexión segura con SQL Server para gestionar tus productos.
