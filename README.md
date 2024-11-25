@@ -18,3 +18,5 @@ La contextualización del modelo, fue desarrollándose en varias etapas que se r
 El desarrollo fue desplegado en un equipo local, utilizando Visual Studio Code + NodeJS + SQL Server Express 2022.
 
 Se deja tambien un backup de la base de datos relacional generada con los scripts provistos por el modelo.
+
+En la wiki de este respositorio (https://github.com/coliveranqn/landing_agente_IA.wiki.git) se encuentran los prompts utilizados y las respuestas obtenidas del modelo.
