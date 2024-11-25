@@ -3,7 +3,7 @@
 Sitio web desarrollado con el modelo de IA generativa: ChatGPT. Es una landing page, de una empresa ficticia de venta de calzado "Namun Calzados", cuya Estrategia de Marketing,  Modelo de Negocio  _(Modelo Canvas)_, Manual de Marca _(Fuentes, Imágenes, Papelería, Packaging)_ y Marco Legal _(Términos y Condiciones)_ , fueron también generados utilizando éstas herramientas.
 La contextualización del modelo, fue desarrollándose en varias etapas que se resumen a continuación: 
 
--Desarrollo web utilizando NodeJs con frontend framework Boostrap y backend con un api rest conectado a BD Mssql Server.
+-Desarrollo web utilizando NodeJs con frontend framework Boostrap y backend con un api rest conectado a BD Mssql Server, que sea responsive y con un diseño visual.
 
 -Incorporación de un Asistente Virtual conectado via websocket.
 
@@ -18,3 +18,5 @@ La contextualización del modelo, fue desarrollándose en varias etapas que se r
 El desarrollo fue desplegado en un equipo local, utilizando Visual Studio Code + NodeJS + SQL Server Express 2022.
 
 Se deja tambien un backup de la base de datos relacional generada con los scripts provistos por el modelo. 
+
+En la wiki de este respositorio (https://github.com/coliveranqn/landing_agente_IA.wiki.git) se encuentran los prompts utilizados y las respuestas obtenidas del modelo. 
