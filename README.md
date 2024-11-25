@@ -19,4 +19,4 @@ El desarrollo fue desplegado en un equipo local, utilizando Visual Studio Code +
 
 Se deja tambien un backup de la base de datos relacional generada con los scripts provistos por el modelo.
 
-En la wiki de este respositorio (https://github.com/coliveranqn/landing_agente_IA.wiki.git) se encuentran los prompts utilizados y las respuestas obtenidas del modelo.
+En la [wiki](https://github.com/coliveranqn/landing_agente_IA/wiki) de este respositorio se encuentran los prompts utilizados y las respuestas obtenidas del modelo.
